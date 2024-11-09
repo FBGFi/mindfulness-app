@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mindfulness_app/pages/analytics/analytics.dart';
+import 'package:mindfulness_app/pages/calendar/calendar.dart';
+import 'package:mindfulness_app/pages/home/home.dart';
 
 void main() {
   runApp(const MindfulnessApp());
@@ -14,21 +17,10 @@ class MindfulnessApp extends StatefulWidget {
 class _MindfulnessAppState extends State<MindfulnessApp> {
   int _selectedIndex = 0;
 
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = [
-    Text(
-      "Home",
-      style: optionStyle,
-    ),
-    Text(
-      "Calendar",
-      style: optionStyle,
-    ),
-    Text(
-      "Analytics",
-      style: optionStyle,
-    ),
+  static const List<Widget> _pages = [
+    HomePage(),
+    CalendarPage(),
+    AnalyticsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -49,7 +41,7 @@ class _MindfulnessAppState extends State<MindfulnessApp> {
           length: 3,
           child: Scaffold(
             body: Center(
-              child: _widgetOptions.elementAt(_selectedIndex),
+              child: _pages.elementAt(_selectedIndex),
             ),
             bottomNavigationBar: BottomNavigationBar(
               items: const [
