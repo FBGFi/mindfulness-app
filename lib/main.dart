@@ -55,7 +55,7 @@ class _MindfulnessAppState extends State<MindfulnessApp> {
                     icon: Icon(Icons.analytics), label: "Analytics"),
               ],
               currentIndex: _selectedIndex,
-              selectedItemColor: Theme.of(context).colorScheme.primary,
+              selectedItemColor: Colors.blue,
               onTap: _onItemTapped,
             ),
           )),

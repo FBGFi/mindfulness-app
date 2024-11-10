@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mindfulness_app/pages/home/components/add_mind_set_modal.dart';
 import 'package:mindfulness_app/pages/home/components/mind_sets.dart';
 import 'package:mindfulness_app/utils/mind_set_object.dart';
 
@@ -17,13 +18,9 @@ class _HomePageState extends State<HomePage> {
         MindSetObject(feeling: "Sad", notes: "Some notes"),
   };
 
-  void _onAddNew() {
+  void _onAddNew(MindSetObject mindSet) {
     setState(() {
-      _mindSets[DateTime.now().toIso8601String()] = MindSetObject(
-          feeling:
-              "New feeling with very long name to check overflowing right now just so it goes correctly",
-          notes:
-              "New notes with very long name to check overflowing right now just so it goes correctly");
+      _mindSets[DateTime.now().toIso8601String()] = mindSet;
     });
   }
 
@@ -47,8 +44,12 @@ class _HomePageState extends State<HomePage> {
         onDeleteMindSet: onDeleteMindSet,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _onAddNew,
-        tooltip: "Add new",
+        onPressed: () {
+          showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) => AddMindSetModal(onAddNew: _onAddNew));
+        },
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         child: const Icon(Icons.add),
       ),
