@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:mindfulness_app/utils/constants.dart';
 import 'package:mindfulness_app/utils/mind_set_object.dart';
 
 class AddMindSetModal extends StatefulWidget {
@@ -18,9 +18,13 @@ class _AddMindSetModalState extends State<AddMindSetModal> {
   final _feelingFocusNode = FocusNode();
   final _notesFocusNode = FocusNode();
 
-  void onFeelingChanged(String feeling) {
+  void onFeelingChanged(String? feeling) {
     setState(() {
-      this.feeling = feeling;
+      if (feeling == null) {
+        this.feeling = "";
+      } else {
+        this.feeling = feeling;
+      }
     });
   }
 
@@ -66,10 +70,21 @@ class _AddMindSetModalState extends State<AddMindSetModal> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                TextField(
+                DropdownMenu(
                   focusNode: _feelingFocusNode,
-                  onChanged: onFeelingChanged,
-                  decoration: const InputDecoration(label: Text("Feeling")),
+                  width: MediaQuery.sizeOf(context).width,
+                  requestFocusOnTap: true,
+                  onSelected: onFeelingChanged,
+                  dropdownMenuEntries: MIND_SET_VALUES.values
+                      .map((group) => group.entries
+                          .map((entry) => DropdownMenuEntry(
+                                label: entry.key,
+                                value: entry.key,
+                              ))
+                          .toList())
+                      .expand((e) => e)
+                      .toList(),
+                  label: const Text("Feeling"),
                 ),
                 TextField(
                   focusNode: _notesFocusNode,
