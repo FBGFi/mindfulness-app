@@ -27,6 +27,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void onDeleteMindSet(String dateTime) {
+    setState(() {
+      _mindSets.remove(dateTime);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +42,10 @@ class _HomePageState extends State<HomePage> {
             DateFormat("EEE, d MMMM yyyy").format(DateTime.now()),
             style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
           )),
-      body: MindSets(mindSets: _mindSets),
+      body: MindSets(
+        mindSets: _mindSets,
+        onDeleteMindSet: onDeleteMindSet,
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _onAddNew,
         tooltip: "Add new",

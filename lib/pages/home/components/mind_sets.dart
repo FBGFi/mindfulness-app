@@ -3,10 +3,15 @@ import 'package:intl/intl.dart';
 import 'package:mindfulness_app/utils/mind_set_object.dart';
 
 class MindSet extends StatefulWidget {
-  const MindSet({super.key, required this.dateTime, required this.mindSet});
+  const MindSet(
+      {super.key,
+      required this.dateTime,
+      required this.mindSet,
+      required this.onDelete});
 
   final String dateTime;
   final MindSetObject mindSet;
+  final Function(String dateTime) onDelete;
 
   @override
   State<MindSet> createState() => _MindSetState();
@@ -24,6 +29,10 @@ class _MindSetState extends State<MindSet> {
     setState(() {
       _displayNotes = !_displayNotes;
     });
+  }
+
+  void _onDelete(String key) {
+    //
   }
 
   @override
@@ -58,7 +67,7 @@ class _MindSetState extends State<MindSet> {
                         widthFactor: 0.05,
                       ),
                       FractionallySizedBox(
-                          widthFactor: 0.8,
+                          widthFactor: 0.7,
                           child: Stack(
                               alignment: AlignmentDirectional.topEnd,
                               children: [
@@ -69,25 +78,47 @@ class _MindSetState extends State<MindSet> {
                                           .colorScheme
                                           .onPrimary),
                                 ),
-                              ]))
+                              ])),
+                      FractionallySizedBox(
+                          widthFactor: 0.1,
+                          child: Align(
+                              alignment: Alignment.topRight,
+                              child: IconButton(
+                                  onPressed: () =>
+                                      widget.onDelete(widget.dateTime),
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  style: const ButtonStyle(
+                                      tapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap),
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                  icon: const Icon(Icons.delete))))
                     ],
                   ),
+                  Visibility(visible: _displayNotes, child: const Divider()),
                   Visibility(
                       visible: _displayNotes,
-                      child: Text(widget.mindSet.notes,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            fontSize:
-                                Theme.of(context).textTheme.bodySmall?.fontSize,
-                          )))
+                      child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(widget.mindSet.notes,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                fontSize: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.fontSize,
+                              ))))
                 ]))));
   }
 }
 
 class MindSets extends StatefulWidget {
-  const MindSets({super.key, required this.mindSets});
+  const MindSets(
+      {super.key, required this.mindSets, required this.onDeleteMindSet});
 
   final Map<String, MindSetObject> mindSets;
+  final Function(String dateTime) onDeleteMindSet;
 
   @override
   State<MindSets> createState() => _MindSetsState();
@@ -96,12 +127,16 @@ class MindSets extends StatefulWidget {
 class _MindSetsState extends State<MindSets> {
   @override
   Widget build(BuildContext context) {
+    if (widget.mindSets.isEmpty) {
+      return const Center(child: Text("No recorded mindsets for this day"));
+    }
     return ListView(
         children: widget.mindSets.entries
             .map((entry) => Center(
                     child: MindSet(
                   dateTime: entry.key,
                   mindSet: entry.value,
+                  onDelete: widget.onDeleteMindSet,
                 )))
             .toList());
   }
