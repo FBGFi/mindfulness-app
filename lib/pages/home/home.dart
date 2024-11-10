@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mindfulness_app/pages/home/components/mind_sets.dart';
+import 'package:mindfulness_app/utils/mind_set_object.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,17 +11,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // TODO get from global state and extend values to include more details
-  final Map<String, String> _mindSets = {
-    "11:00": "Sad",
-    "12:00": "Angry",
-    "13:00": "Joyful",
+  // TODO get from global state
+  final Map<String, MindSetObject> _mindSets = {
+    DateTime.now().toIso8601String():
+        MindSetObject(feeling: "Sad", notes: "Some notes"),
   };
 
   void _onAddNew() {
     setState(() {
-      String now = DateFormat("HH:mm:ss").format(DateTime.now());
-      _mindSets[now] = "New feeling";
+      _mindSets[DateTime.now().toIso8601String()] = MindSetObject(
+          feeling:
+              "New feeling with very long name to check overflowing right now just so it goes correctly",
+          notes:
+              "New notes with very long name to check overflowing right now just so it goes correctly");
     });
   }
 
@@ -27,29 +31,16 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.amber,
-          title: Text(DateFormat("EEE, d MMMM yyyy").format(DateTime.now()))),
-      body: ListView(
-          children: _mindSets.entries
-              .map((entry) => Center(
-                  child: Container(
-                      margin: const EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.amber.withAlpha(200),
-                      ),
-                      child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Flex(
-                            direction: Axis.horizontal,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [Text(entry.key), Text(entry.value)],
-                          )))))
-              .toList()),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          title: Text(
+            DateFormat("EEE, d MMMM yyyy").format(DateTime.now()),
+            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+          )),
+      body: MindSets(mindSets: _mindSets),
       floatingActionButton: FloatingActionButton(
         onPressed: _onAddNew,
         tooltip: "Add new",
-        backgroundColor: Colors.amber,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         child: const Icon(Icons.add),
       ),
     );

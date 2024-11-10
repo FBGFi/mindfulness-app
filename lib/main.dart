@@ -34,7 +34,10 @@ class _MindfulnessAppState extends State<MindfulnessApp> {
     return MaterialApp(
       title: 'Mindfulness App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        textTheme: const TextTheme(
+            bodySmall: TextStyle(fontSize: 15.0),
+            bodyMedium: TextStyle(fontSize: 18.0)),
         useMaterial3: true,
       ),
       home: DefaultTabController(
@@ -52,7 +55,7 @@ class _MindfulnessAppState extends State<MindfulnessApp> {
                     icon: Icon(Icons.analytics), label: "Analytics"),
               ],
               currentIndex: _selectedIndex,
-              selectedItemColor: Colors.amber[800],
+              selectedItemColor: Theme.of(context).colorScheme.primary,
               onTap: _onItemTapped,
             ),
           )),
