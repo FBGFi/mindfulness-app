@@ -12,6 +12,7 @@ class AddMindSetModal extends StatefulWidget {
 }
 
 class _AddMindSetModalState extends State<AddMindSetModal> {
+  String category = "";
   String feeling = "";
   String notes = "";
   bool dropHasError = false;
@@ -19,12 +20,14 @@ class _AddMindSetModalState extends State<AddMindSetModal> {
   final _feelingFocusNode = FocusNode();
   final _notesFocusNode = FocusNode();
 
-  void onFeelingChanged(String? feeling) {
+  void onFeelingChanged((String, String)? feeling) {
     setState(() {
       if (feeling == null) {
+        this.category = "";
         this.feeling = "";
       } else {
-        this.feeling = feeling;
+        this.category = feeling.$1;
+        this.feeling = feeling.$2;
       }
       this.dropHasError = false;
     });
@@ -37,12 +40,13 @@ class _AddMindSetModalState extends State<AddMindSetModal> {
   }
 
   void onConfirm() {
-    if (feeling == "") {
+    if (feeling == "" || category == "") {
       setState(() {
         this.dropHasError = true;
       });
     } else {
-      widget.onAddNew(MindSetObject(feeling: feeling, notes: notes));
+      widget.onAddNew(
+          MindSetObject(category: category, feeling: feeling, notes: notes));
       Navigator.pop(context);
     }
   }
@@ -78,7 +82,7 @@ class _AddMindSetModalState extends State<AddMindSetModal> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                DropdownMenu(
+                DropdownMenu<(String, String)>(
                   focusNode: _feelingFocusNode,
                   width: MediaQuery.sizeOf(context).width,
                   requestFocusOnTap: true,
@@ -93,7 +97,7 @@ class _AddMindSetModalState extends State<AddMindSetModal> {
                           .entries
                           .map((entry) => DropdownMenuEntry(
                               label: entry.value,
-                              value: entry.value,
+                              value: (group.key, entry.value),
                               labelWidget: Container(
                                   alignment: Alignment.centerLeft,
                                   height: 60,

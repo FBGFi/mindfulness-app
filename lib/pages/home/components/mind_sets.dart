@@ -72,7 +72,7 @@ class _MindSetState extends State<MindSet> {
                               alignment: AlignmentDirectional.topEnd,
                               children: [
                                 Text(
-                                  widget.mindSet.feeling,
+                                  '${widget.mindSet.category} - ${widget.mindSet.feeling}',
                                   style: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme

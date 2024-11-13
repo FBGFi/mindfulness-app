@@ -13,10 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   // TODO get from global state
-  final Map<String, MindSetObject> _mindSets = {
-    DateTime.now().toIso8601String():
-        MindSetObject(feeling: "Sad", notes: "Some notes"),
-  };
+  final Map<String, MindSetObject> _mindSets = {};
 
   void _onAddNew(MindSetObject mindSet) {
     setState(() {
