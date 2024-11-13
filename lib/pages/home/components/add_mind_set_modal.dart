@@ -14,6 +14,7 @@ class AddMindSetModal extends StatefulWidget {
 class _AddMindSetModalState extends State<AddMindSetModal> {
   String feeling = "";
   String notes = "";
+  bool dropHasError = false;
 
   final _feelingFocusNode = FocusNode();
   final _notesFocusNode = FocusNode();
@@ -25,6 +26,7 @@ class _AddMindSetModalState extends State<AddMindSetModal> {
       } else {
         this.feeling = feeling;
       }
+      this.dropHasError = false;
     });
   }
 
@@ -35,8 +37,14 @@ class _AddMindSetModalState extends State<AddMindSetModal> {
   }
 
   void onConfirm() {
-    widget.onAddNew(MindSetObject(feeling: feeling, notes: notes));
-    Navigator.pop(context);
+    if (feeling == "") {
+      setState(() {
+        this.dropHasError = true;
+      });
+    } else {
+      widget.onAddNew(MindSetObject(feeling: feeling, notes: notes));
+      Navigator.pop(context);
+    }
   }
 
   @override
@@ -74,13 +82,60 @@ class _AddMindSetModalState extends State<AddMindSetModal> {
                   focusNode: _feelingFocusNode,
                   width: MediaQuery.sizeOf(context).width,
                   requestFocusOnTap: true,
+                  menuHeight: MediaQuery.of(context).size.height / 2.5,
                   onSelected: onFeelingChanged,
-                  dropdownMenuEntries: MIND_SET_VALUES.values
-                      .map((group) => group.entries
+                  errorText: dropHasError ? "Required" : null,
+                  dropdownMenuEntries: MIND_SET_VALUES.entries
+                      .map((group) => group.value.entries
+                          .map((entry) => entry.key)
+                          .toList()
+                          .asMap()
+                          .entries
                           .map((entry) => DropdownMenuEntry(
-                                label: entry.key,
-                                value: entry.key,
-                              ))
+                              label: entry.value,
+                              value: entry.value,
+                              labelWidget: Container(
+                                  alignment: Alignment.centerLeft,
+                                  height: 60,
+                                  child: entry.key == 0
+                                      ? Stack(
+                                          clipBehavior: Clip.none,
+                                          children: [
+                                              Positioned(
+                                                  top: -20,
+                                                  left: 0,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        group.key,
+                                                        style: const TextStyle(
+                                                            fontSize: 12),
+                                                      ),
+                                                      Container(
+                                                        height: 1,
+                                                        color: const Color
+                                                            .fromRGBO(
+                                                            140, 140, 140, 1),
+                                                        width: MediaQuery.of(
+                                                                context)
+                                                            .size
+                                                            .width,
+                                                      )
+                                                    ],
+                                                  )),
+                                              Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 15),
+                                                  child: Text(entry.value))
+                                            ])
+                                      : Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 15),
+                                          child: Text(entry.value)))))
                           .toList())
                       .expand((e) => e)
                       .toList(),
