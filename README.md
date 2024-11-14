@@ -15,3 +15,7 @@ App consists of multiple pages with different functionalities helping to track a
   - allows selecting specific day to review how one was feeling during that day
 - Analytics
   - can choose a time period from which to visualize feelings as heatmap or trend
+
+## Notes
+
+Using Hive required saved values to have declared models, which can be built into adapters by running `flutter packages pub run build_runner build`. This creates a \*.g.dart file containing the adapted which must then be registered in `main()`.

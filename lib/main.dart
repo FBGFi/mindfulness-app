@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:mindfulness_app/models/mind_set_object.dart';
 import 'package:mindfulness_app/pages/analytics/analytics.dart';
 import 'package:mindfulness_app/pages/calendar/calendar.dart';
 import 'package:mindfulness_app/pages/home/home.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final documentsDir = await getApplicationDocumentsDirectory();
+  Hive.init(documentsDir.path);
+  Hive.registerAdapter<MindSetObject>(MindSetObjectAdapter());
+  Hive.registerAdapter<MindSetObjectModel>(MindSetObjectModelAdapter());
   runApp(const MindfulnessApp());
 }
 

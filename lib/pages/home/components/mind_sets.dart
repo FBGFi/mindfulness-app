@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mindfulness_app/utils/mind_set_object.dart';
+import 'package:mindfulness_app/models/mind_set_object.dart';
 
 class MindSet extends StatefulWidget {
   const MindSet(
@@ -29,10 +29,6 @@ class _MindSetState extends State<MindSet> {
     setState(() {
       _displayNotes = !_displayNotes;
     });
-  }
-
-  void _onDelete(String key) {
-    //
   }
 
   @override

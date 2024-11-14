@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mindfulness_app/models/mind_set_object.dart';
 import 'package:mindfulness_app/utils/constants.dart';
-import 'package:mindfulness_app/utils/mind_set_object.dart';
 
 class AddMindSetModal extends StatefulWidget {
   const AddMindSetModal({super.key, required this.onAddNew});
