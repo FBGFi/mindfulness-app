@@ -5,20 +5,20 @@ part 'mind_set_object.g.dart';
 @HiveType(typeId: 0)
 class MindSetObject extends HiveObject {
   @HiveField(0)
-  String category;
+  late int date;
   @HiveField(1)
-  String feeling;
+  String category;
   @HiveField(2)
-  String notes;
+  String feeling;
+  @HiveField(3)
+  late String notes;
 
-  MindSetObject(
-      {required this.category, required this.feeling, required this.notes});
-}
-
-@HiveType(typeId: 1)
-class MindSetObjectModel extends HiveObject {
-  @HiveField(0)
-  Map<String, MindSetObject> mindSets;
-
-  MindSetObjectModel({required this.mindSets});
+  MindSetObject({
+    int? date,
+    this.notes = "No notes",
+    required this.category,
+    required this.feeling,
+  }) {
+    this.date = date ?? DateTime.now().millisecondsSinceEpoch;
+  }
 }

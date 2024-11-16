@@ -11,7 +11,6 @@ void main() async {
   final documentsDir = await getApplicationDocumentsDirectory();
   Hive.init(documentsDir.path);
   Hive.registerAdapter<MindSetObject>(MindSetObjectAdapter());
-  Hive.registerAdapter<MindSetObjectModel>(MindSetObjectModelAdapter());
   runApp(const MindfulnessApp());
 }
 

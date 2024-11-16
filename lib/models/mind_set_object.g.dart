@@ -17,21 +17,24 @@ class MindSetObjectAdapter extends TypeAdapter<MindSetObject> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return MindSetObject(
-      category: fields[0] as String,
-      feeling: fields[1] as String,
-      notes: fields[2] as String,
+      date: fields[0] as int?,
+      notes: fields[3] as String,
+      category: fields[1] as String,
+      feeling: fields[2] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, MindSetObject obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.category)
+      ..write(obj.date)
       ..writeByte(1)
-      ..write(obj.feeling)
+      ..write(obj.category)
       ..writeByte(2)
+      ..write(obj.feeling)
+      ..writeByte(3)
       ..write(obj.notes);
   }
 
@@ -42,40 +45,6 @@ class MindSetObjectAdapter extends TypeAdapter<MindSetObject> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is MindSetObjectAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
-
-class MindSetObjectModelAdapter extends TypeAdapter<MindSetObjectModel> {
-  @override
-  final int typeId = 1;
-
-  @override
-  MindSetObjectModel read(BinaryReader reader) {
-    final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
-    return MindSetObjectModel(
-      mindSets: (fields[0] as Map).cast<String, MindSetObject>(),
-    );
-  }
-
-  @override
-  void write(BinaryWriter writer, MindSetObjectModel obj) {
-    writer
-      ..writeByte(1)
-      ..writeByte(0)
-      ..write(obj.mindSets);
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is MindSetObjectModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

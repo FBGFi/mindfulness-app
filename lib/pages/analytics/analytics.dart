@@ -13,8 +13,8 @@ class AnalyticsPage extends StatefulWidget {
 }
 
 class _AnalyticsPageState extends State<AnalyticsPage> {
-  Box<MindSetObjectModel>? _mindSetsBox;
-  Map<String, MindSetObject> _mindSets = {};
+  Box<List<MindSetObject>>? _mindSetsBox;
+  final List<MindSetObject> _mindSets = [];
 
   double _getTodayMin() {
     final today = DateTime.now();
@@ -32,10 +32,10 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   }
 
   List<double> _calculateLinearStops() {
-    final dateValues = _mindSets.entries
+    if (_mindSets.isEmpty) return [];
+    final dateValues = _mindSets
         .map(
-          (entry) =>
-              DateTime.parse(entry.key).millisecondsSinceEpoch.toDouble(),
+          (entry) => entry.date.toDouble(),
         )
         .toList();
     final min = dateValues[0];
@@ -49,17 +49,17 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   void initState() {
     super.initState();
     if (!Hive.isBoxOpen("mindfulness_app")) {
-      Hive.openBox<MindSetObjectModel>("mindfulness_app").then((box) {
+      Hive.openBox<List<MindSetObject>>("mindfulness_app").then((box) {
         setState(() {
           _mindSetsBox = box;
-          _mindSets = box.get("mindSets")?.mindSets ?? {};
+          _mindSets.addAll(box.get("mindSets") ?? []);
         });
       });
     } else {
       setState(() {
-        final box = Hive.box<MindSetObjectModel>("mindfulness_app");
+        final box = Hive.box<List<MindSetObject>>("mindfulness_app");
         _mindSetsBox = box;
-        _mindSets = box.get("mindSets")?.mindSets ?? {};
+        _mindSets.addAll(box.get("mindSets") ?? []);
       });
     }
   }
@@ -67,10 +67,10 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   @override
   Widget build(BuildContext context) {
     // TODO have to sort here
-    final values = _mindSets.entries
+    final values = _mindSets
         .map((entry) => (
-              DateTime.parse(entry.key).millisecondsSinceEpoch.toDouble(),
-              getMindSetRankValue(entry.value)?.toDouble() ?? 0
+              (entry.date).toDouble(),
+              getMindSetRankValue(entry)?.toDouble() ?? 0
             ))
         .toList();
     final spots = values.map((entry) {
@@ -90,13 +90,13 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                 child: LineChart(LineChartData(
                     lineBarsData: [
                       LineChartBarData(
-                        showingIndicators: _mindSets.entries
+                        showingIndicators: _mindSets
                             .map((entry) =>
-                                getMindSetRankValue(entry.value)?.floor() ?? 0)
+                                getMindSetRankValue(entry)?.floor() ?? 0)
                             .toList(),
                         gradient: LinearGradient(
-                            colors: _mindSets.entries
-                                .map((entry) => getMindSetColor(entry.value))
+                            colors: _mindSets
+                                .map((entry) => getMindSetColor(entry))
                                 .toList(),
                             stops: _calculateLinearStops()),
                         spots: spots,

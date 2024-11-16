@@ -4,15 +4,10 @@ import 'package:mindfulness_app/models/mind_set_object.dart';
 import 'package:mindfulness_app/utils/utils.dart';
 
 class MindSet extends StatefulWidget {
-  const MindSet(
-      {super.key,
-      required this.dateTime,
-      required this.mindSet,
-      required this.onDelete});
+  const MindSet({super.key, required this.mindSet, required this.onDelete});
 
-  final String dateTime;
   final MindSetObject mindSet;
-  final Function(String dateTime) onDelete;
+  final Function(MindSetObject mindSet) onDelete;
 
   @override
   State<MindSet> createState() => _MindSetState();
@@ -21,8 +16,9 @@ class MindSet extends StatefulWidget {
 class _MindSetState extends State<MindSet> {
   bool _displayNotes = false;
 
-  String _formatDateTime(String key) {
-    DateTime dateTime = DateTime.parse(key);
+  String _formatDateTime() {
+    DateTime dateTime =
+        DateTime.fromMillisecondsSinceEpoch(widget.mindSet.date);
     return DateFormat("HH:mm").format(dateTime);
   }
 
@@ -52,7 +48,7 @@ class _MindSetState extends State<MindSet> {
                     children: [
                       FractionallySizedBox(
                           widthFactor: 0.15,
-                          child: Text(_formatDateTime(widget.dateTime),
+                          child: Text(_formatDateTime(),
                               style: TextStyle(
                                   color:
                                       Theme.of(context).colorScheme.onPrimary,
@@ -83,7 +79,7 @@ class _MindSetState extends State<MindSet> {
                               alignment: Alignment.topRight,
                               child: IconButton(
                                   onPressed: () =>
-                                      widget.onDelete(widget.dateTime),
+                                      widget.onDelete(widget.mindSet),
                                   padding: EdgeInsets.zero,
                                   constraints: const BoxConstraints(),
                                   style: const ButtonStyle(
@@ -115,8 +111,8 @@ class MindSets extends StatefulWidget {
   const MindSets(
       {super.key, required this.mindSets, required this.onDeleteMindSet});
 
-  final Map<String, MindSetObject> mindSets;
-  final Function(String dateTime) onDeleteMindSet;
+  final List<MindSetObject> mindSets;
+  final Function(MindSetObject mindSet) onDeleteMindSet;
 
   @override
   State<MindSets> createState() => _MindSetsState();
@@ -129,11 +125,10 @@ class _MindSetsState extends State<MindSets> {
       return const Center(child: Text("No recorded mindsets for this day"));
     }
     return ListView(
-        children: widget.mindSets.entries
+        children: widget.mindSets
             .map((entry) => Center(
                     child: MindSet(
-                  dateTime: entry.key,
-                  mindSet: entry.value,
+                  mindSet: entry,
                   onDelete: widget.onDeleteMindSet,
                 )))
             .toList());

@@ -14,8 +14,8 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  Box<MindSetObjectModel>? _mindSetsBox;
-  Map<String, MindSetObject> _mindSets = {};
+  Box<List<MindSetObject>>? _mindSetsBox;
+  final List<MindSetObject> _mindSets = [];
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month;
@@ -23,25 +23,14 @@ class _CalendarPageState extends State<CalendarPage> {
   List<MindSetObject> _getMindsetsOfDay(DateTime day) {
     final formattedDay = DateFormat("yyyy-MM-dd").format(day);
     final List<MindSetObject> dayMindSets = [];
-    _mindSets.entries.forEach((entry) {
-      if (DateFormat("yyyy-MM-dd").format(DateTime.parse(entry.key)) ==
+    _mindSets.forEach((entry) {
+      if (DateFormat("yyyy-MM-dd")
+              .format(DateTime.fromMillisecondsSinceEpoch(entry.date)) ==
           formattedDay) {
-        dayMindSets.add(entry.value);
+        dayMindSets.add(entry);
       }
     });
     return dayMindSets;
-  }
-
-  Map<String, MindSetObject> _getSelectedDayMindSets() {
-    final formattedDay = DateFormat("yyyy-MM-dd").format(_selectedDay);
-    final Map<String, MindSetObject> mindSets = {};
-    _mindSets.entries.forEach((entry) {
-      if (DateFormat("yyyy-MM-dd").format(DateTime.parse(entry.key)) ==
-          formattedDay) {
-        mindSets[entry.key] = entry.value;
-      }
-    });
-    return mindSets;
   }
 
   double _calculateAverageRank(List<MindSetObject> mindSets) {
@@ -60,17 +49,17 @@ class _CalendarPageState extends State<CalendarPage> {
   void initState() {
     super.initState();
     if (!Hive.isBoxOpen("mindfulness_app")) {
-      Hive.openBox<MindSetObjectModel>("mindfulness_app").then((box) {
+      Hive.openBox<List<MindSetObject>>("mindfulness_app").then((box) {
         setState(() {
           _mindSetsBox = box;
-          _mindSets = box.get("mindSets")?.mindSets ?? {};
+          _mindSets.addAll(box.get("mindSets") ?? []);
         });
       });
     } else {
       setState(() {
-        final box = Hive.box<MindSetObjectModel>("mindfulness_app");
+        final box = Hive.box<List<MindSetObject>>("mindfulness_app");
         _mindSetsBox = box;
-        _mindSets = box.get("mindSets")?.mindSets ?? {};
+        _mindSets.addAll(box.get("mindSets") ?? []);
       });
     }
   }
@@ -142,7 +131,7 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
           Expanded(
               child: MindSets(
-                  mindSets: _getSelectedDayMindSets(),
+                  mindSets: _getMindsetsOfDay(_selectedDay),
                   onDeleteMindSet: (str) {}))
         ],
       ),
