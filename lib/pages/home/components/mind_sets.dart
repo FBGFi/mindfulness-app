@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mindfulness_app/models/mind_set_object.dart';
+import 'package:mindfulness_app/utils/utils.dart';
 
 class MindSet extends StatefulWidget {
   const MindSet(
@@ -37,6 +38,7 @@ class _MindSetState extends State<MindSet> {
         margin: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
+          border: Border.all(color: getMindSetColor(widget.mindSet), width: 3),
           color: Theme.of(context).colorScheme.primary.withAlpha(200),
         ),
         child: InkWell(
