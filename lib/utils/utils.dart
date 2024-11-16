@@ -3,7 +3,7 @@ import 'package:mindfulness_app/models/mind_set_object.dart';
 import 'package:mindfulness_app/utils/constants.dart';
 
 /// Calculated lightness multiplier should be between 0.4 and 0.7, lower value indicating higher match
-double calculateLightness(int value, int minValue, int maxValue) {
+double calculateLightness(double value, int minValue, int maxValue) {
   final absoluteValue = value.abs();
   final range = maxValue - minValue;
   return ((0.4 + (0.2 * ((maxValue - absoluteValue) / range))) * 100)
@@ -11,9 +11,7 @@ double calculateLightness(int value, int minValue, int maxValue) {
       100;
 }
 
-Color getMindSetColor(MindSetObject mindSet) {
-  final category = MIND_SET_VALUES[mindSet.category];
-  final value = category != null ? category[mindSet.feeling] : null;
+Color getColorByRank(double? value) {
   if (value != null) {
     if (value >= 7) {
       return HSLColor.fromColor(Colors.green)
@@ -42,4 +40,14 @@ Color getMindSetColor(MindSetObject mindSet) {
     }
   }
   return Colors.grey;
+}
+
+double? getMindSetRankValue(MindSetObject mindSet) {
+  final category = MIND_SET_VALUES[mindSet.category];
+  final value = category != null ? category[mindSet.feeling] : null;
+  return value?.toDouble();
+}
+
+Color getMindSetColor(MindSetObject mindSet) {
+  return getColorByRank(getMindSetRankValue(mindSet));
 }
