@@ -34,6 +34,7 @@ class _CalendarPageState extends State<CalendarPage> {
       body: Column(
         children: [
           MindSetCalendar(
+              focusedDay: DateTime.now(),
               selectedDay: _selectedDay,
               onDaySelected: (selectedDay, focusedDay) {
                 setState(() {
