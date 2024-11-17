@@ -67,6 +67,22 @@ List<MindSetObject> getMindsetsOfDay(
   return dayMindSets;
 }
 
+List<MindSetObject> getMindSetsFromRange(
+    List<MindSetObject> mindSets, DateTime start, DateTime end) {
+  final formattedStart = DateFormat("yyyy-MM-dd").format(start);
+  final formattedEnd = DateFormat("yyyy-MM-dd").format(end);
+  final List<MindSetObject> dayMindSets = [];
+  for (var entry in mindSets) {
+    final formattedEntryDate = DateFormat("yyyy-MM-dd")
+        .format(DateTime.fromMillisecondsSinceEpoch(entry.date));
+    if (formattedEntryDate.compareTo(formattedStart) >= 0 &&
+        formattedEntryDate.compareTo(formattedEnd) <= 0) {
+      dayMindSets.add(entry);
+    }
+  }
+  return dayMindSets;
+}
+
 double calculateAverageRank(List<MindSetObject> mindSets) {
   if (mindSets.isEmpty) return 0;
   double totalRank = 0;
