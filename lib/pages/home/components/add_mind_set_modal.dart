@@ -23,13 +23,13 @@ class _AddMindSetModalState extends State<AddMindSetModal> {
   void onFeelingChanged((String, String)? feeling) {
     setState(() {
       if (feeling == null) {
-        this.category = "";
+        category = "";
         this.feeling = "";
       } else {
-        this.category = feeling.$1;
+        category = feeling.$1;
         this.feeling = feeling.$2;
       }
-      this.dropHasError = false;
+      dropHasError = false;
     });
   }
 
@@ -42,7 +42,7 @@ class _AddMindSetModalState extends State<AddMindSetModal> {
   void onConfirm() {
     if (feeling == "" || category == "") {
       setState(() {
-        this.dropHasError = true;
+        dropHasError = true;
       });
     } else {
       widget.onAddNew(
@@ -68,8 +68,8 @@ class _AddMindSetModalState extends State<AddMindSetModal> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      icon: Icon(Icons.arrow_back))),
-              title: Container(
+                      icon: const Icon(Icons.arrow_back))),
+              title: SizedBox(
                   height: 60.0,
                   child: Align(
                       alignment: Alignment.bottomLeft,

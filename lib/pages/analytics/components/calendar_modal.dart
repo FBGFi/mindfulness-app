@@ -52,7 +52,7 @@ class _CalendarModalState extends State<CalendarModal> {
                     Navigator.pop(context);
                   },
                   icon: const Icon(Icons.arrow_back))),
-          title: Container(
+          title: SizedBox(
               height: 60.0,
               child: Align(
                   alignment: Alignment.bottomLeft,

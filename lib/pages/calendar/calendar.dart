@@ -4,7 +4,6 @@ import 'package:mindfulness_app/components/mind_set_calendar.dart';
 import 'package:mindfulness_app/models/mind_set_object.dart';
 import 'package:mindfulness_app/components/mind_sets.dart';
 import 'package:mindfulness_app/utils/utils.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage(
@@ -19,8 +18,6 @@ class CalendarPage extends StatefulWidget {
 
 class _CalendarPageState extends State<CalendarPage> {
   DateTime _selectedDay = DateTime.now();
-  DateTime _focusedDay = DateTime.now();
-  CalendarFormat _calendarFormat = CalendarFormat.month;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +36,6 @@ class _CalendarPageState extends State<CalendarPage> {
               onDaySelected: (selectedDay, focusedDay) {
                 setState(() {
                   _selectedDay = selectedDay;
-                  _focusedDay = focusedDay;
                 });
               },
               mindSets: widget.mindSets),

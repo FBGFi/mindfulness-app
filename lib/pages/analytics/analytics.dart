@@ -131,7 +131,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
           Expanded(
               child: ListView(
             children: [
-              Container(
+              SizedBox(
                   height: MediaQuery.of(context).size.height / 2,
                   child: Padding(
                       padding: const EdgeInsets.all(10),

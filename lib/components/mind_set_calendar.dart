@@ -4,7 +4,7 @@ import 'package:mindfulness_app/utils/utils.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class MindSetCalendar extends StatefulWidget {
-  MindSetCalendar(
+  const MindSetCalendar(
       {super.key,
       required this.selectedDay,
       this.onDaySelected,
