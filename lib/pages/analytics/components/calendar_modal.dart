@@ -41,7 +41,6 @@ class _CalendarModalState extends State<CalendarModal> {
 
   @override
   Widget build(BuildContext context) {
-    print(_selectedTimeRange);
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,

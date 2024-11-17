@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mindfulness_app/models/mind_set_object.dart';
 import 'package:mindfulness_app/pages/analytics/components/calendar_modal.dart';
+import 'package:mindfulness_app/utils/constants.dart';
 import 'package:mindfulness_app/utils/utils.dart';
 
 class AnalyticsPage extends StatefulWidget {
@@ -37,13 +38,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     final todayMidnight = DateTime(end.year, end.month, end.day, 0, 0, 0)
         .millisecondsSinceEpoch
         .toDouble();
-    return todayMidnight + 60 * 60 * 24 * 1000;
-  }
-
-  double _getRangeMiddlePoint() {
-    final min = _getRangeMin();
-    final max = _getRangeMax();
-    return min + ((max - min) / 2);
+    return todayMidnight + DAY_AS_MILLISECONDS;
   }
 
   double _getRangeAverage() {
@@ -54,14 +49,6 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
   double _getTotalAverage() {
     return calculateAverageRank(widget.mindSets);
-  }
-
-  double _calculateInterval() {
-    final dayAsMilliseconds = 60 * 60 * 24 * 1000;
-    final diff = _selectedTimeRange.$2.millisecondsSinceEpoch -
-        _selectedTimeRange.$1.millisecondsSinceEpoch;
-    final multiplier = diff / dayAsMilliseconds;
-    return 60 * 60 * 1000 * 6 * (1 + multiplier);
   }
 
   String _formatRangeText() {
@@ -118,7 +105,6 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     final rangeAverageBar = LineChartBarData(
       spots: [
         FlSpot(_getRangeMin(), rangeAverage),
-        FlSpot(_getRangeMiddlePoint(), rangeAverage),
         FlSpot(_getRangeMax(), rangeAverage),
       ],
       dotData: const FlDotData(show: false),
@@ -127,12 +113,12 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
     final totalAverageBar = LineChartBarData(
       spots: [
         FlSpot(_getRangeMin(), totalAverage),
-        FlSpot(_getRangeMiddlePoint(), totalAverage),
         FlSpot(_getRangeMax(), totalAverage),
       ],
       dotData: const FlDotData(show: false),
       color: getColorByRank(totalAverage),
     );
+
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
@@ -162,33 +148,22 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                           maxY: 12,
                           minX: _getRangeMin(),
                           maxX: _getRangeMax(),
-                          titlesData: FlTitlesData(
+                          titlesData: const FlTitlesData(
                               show: true,
-                              topTitles: const AxisTitles(
+                              topTitles: AxisTitles(
                                   sideTitles: SideTitles(showTitles: false)),
-                              rightTitles: const AxisTitles(
+                              rightTitles: AxisTitles(
                                   sideTitles: SideTitles(showTitles: false)),
+                              leftTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                showTitles: true,
+                                reservedSize: 40,
+                                minIncluded: false,
+                                maxIncluded: false,
+                              )),
                               bottomTitles: AxisTitles(
                                   sideTitles: SideTitles(
-                                reservedSize: 30,
-                                showTitles: true,
-                                interval: _calculateInterval(),
-                                getTitlesWidget: (value, meta) {
-                                  String text;
-                                  if (value == _getRangeMin() ||
-                                      value == _getRangeMax()) {
-                                    text = "";
-                                  } else {
-                                    text = DateFormat("HH:mm").format(
-                                        DateTime.fromMillisecondsSinceEpoch(
-                                            value.round()));
-                                  }
-                                  return SideTitleWidget(
-                                    axisSide: meta.axisSide,
-                                    space: 4,
-                                    child: Text(text),
-                                  );
-                                },
+                                reservedSize: 0,
                               ))))))),
               Padding(
                   padding: const EdgeInsets.all(10),
@@ -220,7 +195,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                                             color: Theme.of(context)
                                                 .colorScheme
                                                 .onPrimary)),
-                                    Text(rangeAverage.toString(),
+                                    Text(toFixed(rangeAverage).toString(),
                                         style: TextStyle(
                                             color:
                                                 getColorByRank(rangeAverage))),
@@ -231,7 +206,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                                             color: Theme.of(context)
                                                 .colorScheme
                                                 .onPrimary)),
-                                    Text(totalAverage.toString(),
+                                    Text(toFixed(totalAverage).toString(),
                                         style: TextStyle(
                                             color:
                                                 getColorByRank(totalAverage))),

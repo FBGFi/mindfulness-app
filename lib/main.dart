@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:mindfulness_app/models/mind_set_object.dart';
@@ -6,35 +5,6 @@ import 'package:mindfulness_app/pages/analytics/analytics.dart';
 import 'package:mindfulness_app/pages/calendar/calendar.dart';
 import 'package:mindfulness_app/pages/home/home.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:mindfulness_app/utils/constants.dart';
-
-void applyTestData(Box<List<MindSetObject>> box) {
-  final today = DateTime.now();
-  final todayMidnight =
-      DateTime(today.year, today.month, today.day).millisecondsSinceEpoch;
-  final List<MindSetObject> mindSets = [];
-  final categoryMap = MIND_SET_VALUES.keys.toList().asMap();
-  final feelingMap = MIND_SET_VALUES.values
-      .map((entry) => entry.keys.toList().asMap())
-      .toList()
-      .asMap();
-
-  for (var i = 7; i >= 0; i--) {
-    for (var j = 0; j < 4; j++) {
-      final randomCategoryIndex = Random().nextInt(categoryMap.keys.length);
-      final categoryName = categoryMap[randomCategoryIndex]!;
-      final randomFeelingIndex = Random().nextInt(feelingMap.keys.length);
-      final feelingName = feelingMap[randomCategoryIndex]![randomFeelingIndex]!;
-      mindSets.add(MindSetObject(
-          date: todayMidnight -
-              (i * 60 * 60 * 24 * 1000) +
-              ((1 + j) * 4 * 60 * 60 * 1000),
-          category: categoryName,
-          feeling: feelingName));
-    }
-  }
-  box.put("mindSets", mindSets);
-}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -81,11 +51,8 @@ class _MindfulnessAppState extends State<MindfulnessApp> {
     super.initState();
     if (!Hive.isBoxOpen("mindfulness_app")) {
       Hive.openBox<List<dynamic>>("mindfulness_app").then((box) {
-        // box.clear();
         setState(() {
-          // applyTestData(box);
           _mindSetsBox = box;
-          // TODO have to sort here
           _mindSets.addAll(box.get("mindSets")?.cast<MindSetObject>() ?? []);
         });
       });

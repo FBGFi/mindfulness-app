@@ -1,6 +1,6 @@
 /// Categorized and ranked mindsets, ranging from -10 to 10.
 /// They should appear in the dropdown from most positive to most negative.
-Map<String, Map<String, int>> MIND_SET_VALUES = {
+const Map<String, Map<String, int>> MIND_SET_VALUES = {
   "Joy": {
     "Important": 10,
     "Hopeful": 9,
@@ -83,3 +83,7 @@ Map<String, Map<String, int>> MIND_SET_VALUES = {
     "Worthless": -10,
   },
 };
+
+const HOUR_AS_MILLISECONDS = 60 * 60 * 1000;
+const DAY_AS_MILLISECONDS = HOUR_AS_MILLISECONDS * 24;
+const WEEK_AS_MILLISECONDS = DAY_AS_MILLISECONDS * 7;
