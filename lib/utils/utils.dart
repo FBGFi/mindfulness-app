@@ -66,3 +66,15 @@ List<MindSetObject> getMindsetsOfDay(
   }
   return dayMindSets;
 }
+
+double calculateAverageRank(List<MindSetObject> mindSets) {
+  if (mindSets.isEmpty) return 0;
+  double totalRank = 0;
+  mindSets.forEach((mindSet) {
+    final rank = getMindSetRankValue(mindSet);
+    if (rank != null) {
+      totalRank += rank;
+    }
+  });
+  return totalRank / mindSets.length;
+}

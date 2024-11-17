@@ -4,10 +4,10 @@ import 'package:mindfulness_app/models/mind_set_object.dart';
 import 'package:mindfulness_app/utils/utils.dart';
 
 class MindSet extends StatefulWidget {
-  const MindSet({super.key, required this.mindSet, required this.onDelete});
+  const MindSet({super.key, required this.mindSet, this.onDelete});
 
   final MindSetObject mindSet;
-  final Function(MindSetObject mindSet) onDelete;
+  final Function(MindSetObject mindSet)? onDelete;
 
   @override
   State<MindSet> createState() => _MindSetState();
@@ -61,7 +61,7 @@ class _MindSetState extends State<MindSet> {
                         widthFactor: 0.05,
                       ),
                       FractionallySizedBox(
-                          widthFactor: 0.7,
+                          widthFactor: widget.onDelete == null ? 0.8 : 0.7,
                           child: Stack(
                               alignment: AlignmentDirectional.topEnd,
                               children: [
@@ -73,21 +73,24 @@ class _MindSetState extends State<MindSet> {
                                           .onPrimary),
                                 ),
                               ])),
-                      FractionallySizedBox(
-                          widthFactor: 0.1,
-                          child: Align(
-                              alignment: Alignment.topRight,
-                              child: IconButton(
-                                  onPressed: () =>
-                                      widget.onDelete(widget.mindSet),
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(),
-                                  style: const ButtonStyle(
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap),
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary,
-                                  icon: const Icon(Icons.delete))))
+                      widget.onDelete != null
+                          ? FractionallySizedBox(
+                              widthFactor: 0.1,
+                              child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: IconButton(
+                                      onPressed: () =>
+                                          widget.onDelete!(widget.mindSet),
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(),
+                                      style: const ButtonStyle(
+                                          tapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                      icon: const Icon(Icons.delete))))
+                          : const FractionallySizedBox(widthFactor: 0)
                     ],
                   ),
                   Visibility(visible: _displayNotes, child: const Divider()),
@@ -108,11 +111,10 @@ class _MindSetState extends State<MindSet> {
 }
 
 class MindSets extends StatefulWidget {
-  const MindSets(
-      {super.key, required this.mindSets, required this.onDeleteMindSet});
+  const MindSets({super.key, required this.mindSets, this.onDeleteMindSet});
 
   final List<MindSetObject> mindSets;
-  final Function(MindSetObject mindSet) onDeleteMindSet;
+  final Function(MindSetObject mindSet)? onDeleteMindSet;
 
   @override
   State<MindSets> createState() => _MindSetsState();

@@ -85,6 +85,7 @@ class _MindfulnessAppState extends State<MindfulnessApp> {
         setState(() {
           // applyTestData(box);
           _mindSetsBox = box;
+          // TODO have to sort here
           _mindSets.addAll(box.get("mindSets")?.cast<MindSetObject>() ?? []);
         });
       });

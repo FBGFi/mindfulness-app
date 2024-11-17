@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:mindfulness_app/models/mind_set_object.dart';
 import 'package:mindfulness_app/utils/utils.dart';
@@ -48,7 +47,6 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO have to sort here
     final values = widget.mindSets
         .map((entry) => (
               (entry.date).toDouble(),

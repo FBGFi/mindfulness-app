@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mindfulness_app/models/mind_set_object.dart';
 import 'package:mindfulness_app/pages/home/components/add_mind_set_modal.dart';
-import 'package:mindfulness_app/pages/home/components/mind_sets.dart';
+import 'package:mindfulness_app/components/mind_sets.dart';
 import 'package:mindfulness_app/utils/utils.dart';
 
 class HomePage extends StatefulWidget {
