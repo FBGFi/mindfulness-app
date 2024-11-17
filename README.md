@@ -19,3 +19,5 @@ App consists of multiple pages with different functionalities helping to track a
 ## Notes
 
 Using Hive required saved values to have declared models, which can be built into adapters by running `flutter packages pub run build_runner build`. This creates a \*.g.dart file containing the adapted which must then be registered in `main()`.
+
+Note that saving lists directly to Hive must have their boxed type defined as dynamic. Fetched value from box can then be cast into correct type.

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mindfulness_app/models/mind_set_object.dart';
 import 'package:mindfulness_app/utils/constants.dart';
 
@@ -50,4 +51,18 @@ double? getMindSetRankValue(MindSetObject mindSet) {
 
 Color getMindSetColor(MindSetObject mindSet) {
   return getColorByRank(getMindSetRankValue(mindSet));
+}
+
+List<MindSetObject> getMindsetsOfDay(
+    List<MindSetObject> mindSets, DateTime day) {
+  final formattedDay = DateFormat("yyyy-MM-dd").format(day);
+  final List<MindSetObject> dayMindSets = [];
+  for (var entry in mindSets) {
+    if (DateFormat("yyyy-MM-dd")
+            .format(DateTime.fromMillisecondsSinceEpoch(entry.date)) ==
+        formattedDay) {
+      dayMindSets.add(entry);
+    }
+  }
+  return dayMindSets;
 }

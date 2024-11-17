@@ -7,31 +7,20 @@ import 'package:mindfulness_app/utils/utils.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarPage extends StatefulWidget {
-  const CalendarPage({super.key});
+  const CalendarPage(
+      {super.key, required this.onAddMindSet, required this.mindSets});
+
+  final Function(MindSetObject mindSet) onAddMindSet;
+  final List<MindSetObject> mindSets;
 
   @override
   State<CalendarPage> createState() => _CalendarPageState();
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  Box<List<MindSetObject>>? _mindSetsBox;
-  final List<MindSetObject> _mindSets = [];
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   CalendarFormat _calendarFormat = CalendarFormat.month;
-
-  List<MindSetObject> _getMindsetsOfDay(DateTime day) {
-    final formattedDay = DateFormat("yyyy-MM-dd").format(day);
-    final List<MindSetObject> dayMindSets = [];
-    _mindSets.forEach((entry) {
-      if (DateFormat("yyyy-MM-dd")
-              .format(DateTime.fromMillisecondsSinceEpoch(entry.date)) ==
-          formattedDay) {
-        dayMindSets.add(entry);
-      }
-    });
-    return dayMindSets;
-  }
 
   double _calculateAverageRank(List<MindSetObject> mindSets) {
     if (mindSets.isEmpty) return 0;
@@ -43,25 +32,6 @@ class _CalendarPageState extends State<CalendarPage> {
       }
     });
     return totalRank / mindSets.length;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    if (!Hive.isBoxOpen("mindfulness_app")) {
-      Hive.openBox<List<MindSetObject>>("mindfulness_app").then((box) {
-        setState(() {
-          _mindSetsBox = box;
-          _mindSets.addAll(box.get("mindSets") ?? []);
-        });
-      });
-    } else {
-      setState(() {
-        final box = Hive.box<List<MindSetObject>>("mindfulness_app");
-        _mindSetsBox = box;
-        _mindSets.addAll(box.get("mindSets") ?? []);
-      });
-    }
   }
 
   @override
@@ -110,7 +80,7 @@ class _CalendarPageState extends State<CalendarPage> {
               //   return Center(child: Text(day.day.toString()));
               // },
               markerBuilder: (context, day, events) {
-                final mindSetsOfDay = _getMindsetsOfDay(day);
+                final mindSetsOfDay = getMindsetsOfDay(widget.mindSets, day);
                 return Container(
                     width: 16,
                     height: 16,
@@ -131,7 +101,7 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
           Expanded(
               child: MindSets(
-                  mindSets: _getMindsetsOfDay(_selectedDay),
+                  mindSets: getMindsetsOfDay(widget.mindSets, _selectedDay),
                   onDeleteMindSet: (str) {}))
         ],
       ),

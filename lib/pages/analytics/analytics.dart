@@ -6,16 +6,17 @@ import 'package:mindfulness_app/models/mind_set_object.dart';
 import 'package:mindfulness_app/utils/utils.dart';
 
 class AnalyticsPage extends StatefulWidget {
-  const AnalyticsPage({super.key});
+  const AnalyticsPage(
+      {super.key, required this.onAddMindSet, required this.mindSets});
+
+  final Function(MindSetObject mindSet) onAddMindSet;
+  final List<MindSetObject> mindSets;
 
   @override
   State<AnalyticsPage> createState() => _AnalyticsPageState();
 }
 
 class _AnalyticsPageState extends State<AnalyticsPage> {
-  Box<List<MindSetObject>>? _mindSetsBox;
-  final List<MindSetObject> _mindSets = [];
-
   double _getTodayMin() {
     final today = DateTime.now();
     return DateTime(today.year, today.month, today.day, 0, 0, 0)
@@ -32,8 +33,8 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   }
 
   List<double> _calculateLinearStops() {
-    if (_mindSets.isEmpty) return [];
-    final dateValues = _mindSets
+    if (widget.mindSets.isEmpty) return [];
+    final dateValues = widget.mindSets
         .map(
           (entry) => entry.date.toDouble(),
         )
@@ -46,28 +47,9 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    if (!Hive.isBoxOpen("mindfulness_app")) {
-      Hive.openBox<List<MindSetObject>>("mindfulness_app").then((box) {
-        setState(() {
-          _mindSetsBox = box;
-          _mindSets.addAll(box.get("mindSets") ?? []);
-        });
-      });
-    } else {
-      setState(() {
-        final box = Hive.box<List<MindSetObject>>("mindfulness_app");
-        _mindSetsBox = box;
-        _mindSets.addAll(box.get("mindSets") ?? []);
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     // TODO have to sort here
-    final values = _mindSets
+    final values = widget.mindSets
         .map((entry) => (
               (entry.date).toDouble(),
               getMindSetRankValue(entry)?.toDouble() ?? 0
@@ -90,12 +72,12 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                 child: LineChart(LineChartData(
                     lineBarsData: [
                       LineChartBarData(
-                        showingIndicators: _mindSets
+                        showingIndicators: widget.mindSets
                             .map((entry) =>
                                 getMindSetRankValue(entry)?.floor() ?? 0)
                             .toList(),
                         gradient: LinearGradient(
-                            colors: _mindSets
+                            colors: widget.mindSets
                                 .map((entry) => getMindSetColor(entry))
                                 .toList(),
                             stops: _calculateLinearStops()),
